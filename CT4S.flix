@@ -48,5 +48,20 @@ namespace CT4S {
     )
   }
 
+  // now taking from course notes
+  def isMonomorphism(c: Category[o, m], f: m): Bool with Eq[m] = {
+    use List.flatMap;
+    {
+      let* c0 = c.objects;
+      /// let* c1 = c.objects;
+      let* c2 = c.objects;
+      let* u0 = (c.homSets)(c2, c0);
+      let* u1 = (c.homSets)(c2, c0);
+      (u0, u1) :: Nil
+    } |> List.forall(
+      match (u0, u1) -> ((c.compose)(u0, f) == (c.compose)(u1, f)) ==> (u0 == u1)
+    )
+  }
+
   
 }
