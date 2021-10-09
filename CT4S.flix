@@ -63,5 +63,30 @@ namespace CT4S {
     )
   }
 
+  pub type alias Funct[o1, m1, o2, m2] = {
+    objs :: o1 -> o2,
+    morphs :: m1 -> m2
+  }
+
+  law functIds: forall (c1: Category[o1, m1], c2: Category[o2, m2], f: Funct[o1, m1, o2, m2]) with Eq[m1], Eq[m2] . {
+    use List.flatMap;
+    c1.objects |> List.forall(
+      obj -> (f.morphs)((c1.id)(obj)) == (c2.id)((f.objs)(obj))
+    )
+  }
+
+  law functCompose: forall (c1: Category[o1, m1], c2: Category[o2, m2], f: Funct[o1, m1, o2, m2]) with Eq[m1], Eq[m2] . {
+    use List.flatMap;
+    {
+      let* b = c1.objects;
+      let* c = c1.objects;
+      let* d = c1.objects;
+      let* g = (c1.homSets)(b, c);
+      let* h = (c1.homSets)(c, d);
+      (g, h) :: Nil
+    } |> List.forall(
+      match (g, h) -> (f.morphs)((c1.compose)(h, g)) == (c2.compose)((f.morphs)(h), (f.morphs)(g))
+    )
+  }
   
 }
